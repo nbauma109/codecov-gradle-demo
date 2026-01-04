@@ -28,7 +28,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run tests and generate merged JaCoCo report
-        run: ./gradlew --no-daemon jacocoTestReport
+        run: ./gradlew --no-daemon jacocoRootReport
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
