@@ -45,15 +45,21 @@ subprojects {
 }
 
 task jacocoRootReport(type: JacocoReport) {
-    dependsOn subprojects.test
+    dependsOn subprojects.test, subprojects.classes
 
-    executionData.from fileTree(
-        dir: rootDir,
-        include: '**/build/jacoco/*.exec'
-    )
+    doFirst {
+        classDirectories.setFrom files(subprojects.collect { project ->
+            project.sourceSets.main.output
+        })
 
-    subprojects.each { project ->
-        sourceSets project.sourceSets.main
+        sourceDirectories.setFrom files(subprojects.collect { project ->
+            project.sourceSets.main.allSource.srcDirs
+        })
+
+        executionData.setFrom fileTree(
+            dir: rootDir,
+            include: '**/build/jacoco/*.exec'
+        )
     }
 
     reports {
@@ -62,4 +68,5 @@ task jacocoRootReport(type: JacocoReport) {
         csv.enabled false
     }
 }
+
 
