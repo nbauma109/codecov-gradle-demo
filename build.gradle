@@ -43,3 +43,23 @@ subprojects {
         }
     }
 }
+
+task jacocoRootReport(type: JacocoReport) {
+    dependsOn subprojects.test
+
+    executionData.from fileTree(
+        dir: rootDir,
+        include: '**/build/jacoco/*.exec'
+    )
+
+    subprojects.each { project ->
+        sourceSets project.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+}
+
