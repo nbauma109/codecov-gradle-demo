@@ -1,72 +1,49 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
+}
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'jacoco'
+group = 'com.example.sayhello'
+version = '1.0.0'
 
-    jacoco {
-        toolVersion = '0.8.14'
-    }
-
-    buildDir = rootDir.canonicalPath + "/build/" + rootProject.relativePath(projectDir.canonicalPath)
-
-    version = '1.0.0'
-
-    group 'com.example.sayhello'
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+}
+
+jacoco {
+    toolVersion = '0.8.14'
+}
+
+dependencies {
+    jacocoAggregation project(':SayHello.Core')
+    jacocoAggregation project(':SayHello.Driver')
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        testCompile 'junit:junit:4.13.2'
+        testImplementation 'junit:junit:4.13.2'
+    }
+
+    jacoco {
+        toolVersion = '0.8.14'
     }
 }
-
-subprojects {
-    apply plugin: 'maven'
-
-    tasks.withType(Test) {
-        finalizedBy jacocoTestReport
-    }
-
-    jacocoTestReport {
-        dependsOn test
-        reports {
-            xml.enabled true
-            html.enabled true
-            csv.enabled false
-        }
-    }
-}
-
-task jacocoRootReport(type: JacocoReport) {
-    dependsOn subprojects.test, subprojects.classes
-
-    doFirst {
-        classDirectories.setFrom files(subprojects.collect { project ->
-            project.sourceSets.main.output
-        })
-
-        sourceDirectories.setFrom files(subprojects.collect { project ->
-            project.sourceSets.main.allSource.srcDirs
-        })
-
-        executionData.setFrom fileTree(
-            dir: rootDir,
-            include: '**/build/jacoco/*.exec'
-        )
-    }
-
-    reports {
-        xml.enabled true
-        html.enabled true
-        csv.enabled false
-    }
-}
-
-

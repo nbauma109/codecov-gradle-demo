@@ -1,5 +1,5 @@
 compileTestJava.options.encoding = 'UTF-8'
 
 dependencies {
-    testCompile files('src/test/resources')
+    testImplementation files('src/test/resources')
 }

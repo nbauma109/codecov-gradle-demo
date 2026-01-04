@@ -1,1 +1,3 @@
+enableFeaturePreview('STABLE_CONFIGURATION_CACHE')
+
 include "SayHello.Core", "SayHello.Driver"
