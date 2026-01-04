@@ -27,10 +27,6 @@ allprojects {
     }
 }
 
-rootProject.tasks.each { it.enabled = false }
-rootProject.tasks.withType(DefaultTask).each { it.enabled = true }
-rootProject.uploadArchives.enabled = false
-
 subprojects {
     apply plugin: 'maven'
 
